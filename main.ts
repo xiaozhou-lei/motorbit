@@ -473,7 +473,7 @@ export function MotorRunDual(motor1: Motors, speed1: number, motor2: Motors, spe
 //% weight=78
 export function rgb(): neopixel.Strip {
     if (!neoStrip) {
-        neoStrip = neopixel.create(DigitalPin.P16, 10, NeoPixelMode.RGB)
+        neoStrip = neopixel.create(DigitalPin.P2, 6, NeoPixelMode.RGB)
     }
     return neoStrip;
 }
@@ -528,7 +528,7 @@ function RgbDisplay(indexstart: number, indexend: number, rgb: RgbColors): void 
 export function RUS_04(index: RgbUltrasonics, rgb: RgbColors, effect: ColorEffect): void {
     let start, end;
     if (!neoStrip) {
-        neoStrip = neopixel.create(DigitalPin.P16, 10, NeoPixelMode.RGB)
+        neoStrip = neopixel.create(DigitalPin.P2, 6, NeoPixelMode.RGB)
     }
     if (index == RgbUltrasonics.Left) {
         start = 4;
