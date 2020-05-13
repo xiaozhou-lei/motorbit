@@ -29,7 +29,7 @@
     "ColorEffect.Breathing|block": "呼吸灯",
     "ColorEffect.Rotate|block": "旋转流星",
     "ColorEffect.Flash|block": "闪烁",
-    "motorbit.RUS_04|block": "RGB超声波|%RgbUltrasonics|显示颜色%rgb|特效%effect",
+    "motorbit.RUS_04|block": "RGB超声波|%RgbUltrasonics|显示颜色%rgb|特效%effect|引脚 %pin",
     "motorbit.rgb|block": "板载RGB",
     "IrRemote|block": "红外",
     "IrRemote.init|block": "红外遥控器初始化引脚|%pin",

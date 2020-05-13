@@ -7,13 +7,13 @@ load dependency
 
 enum RgbColors {
     //% block=red
-    Red = 0xFF0000,
+    Red = 0x00FF00,
     //% block=orange
     Orange = 0xFFA500,
     //% block=yellow
     Yellow = 0xFFFF00,
     //% block=green
-    Green = 0x00FF00,
+    Green = 0xFF0000,
     //% block=blue
     Blue = 0x0000FF,
     //% block=indigo
@@ -523,22 +523,22 @@ function RgbDisplay(indexstart: number, indexend: number, rgb: RgbColors): void 
     neoStrip.show();
 }
 
-//% blockId="motorbit_rus04" block="RgbUltrasonic|%RgbUltrasonics|show color %rgb|effect %ColorEffect"
+//% blockId="motorbit_rus04" block="RgbUltrasonic|%RgbUltrasonics|show color %rgb|effect %ColorEffect|rgbpin %pin"
 //% weight=75
-export function RUS_04(index: RgbUltrasonics, rgb: RgbColors, effect: ColorEffect): void {
+export function RUS_04(index: RgbUltrasonics, rgb: RgbColors, effect: ColorEffect,pin:DigitalPin): void {
     let start, end;
     if (!neoStrip) {
-        neoStrip = neopixel.create(DigitalPin.P2, 10, NeoPixelMode.RGB)
+        neoStrip = neopixel.create(pin, 6, NeoPixelMode.RGB)
     }
     if (index == RgbUltrasonics.Left) {
-        start = 4;
-        end = 6;
+        start = 0;
+        end = 2;
     } else if (index == RgbUltrasonics.Right) {
-        start = 7;
-        end = 9;
+        start = 3;
+        end = 5;
     } else if (index == RgbUltrasonics.All) {
-        start = 4;
-        end = 9;
+        start = 0;
+        end = 5;
     }
     switch(effect) {
         case ColorEffect.None:
