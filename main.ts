@@ -675,7 +675,7 @@ namespace motorbit {
 
 	}
 	//% block="Setup MAX7219:|Number of matrixs $num|CS(LOAD) = $cs|MOSI(DIN) = $mosi|MISO(not used) = $miso|SCK(CLK) = $sck"
-	//% num.min=1 num.defl=1 cs.defl=DigitalPin.P16 mosi.defl=DigitalPin.P15  miso.defl=DigitalPin.P14  sck.defl=DigitalPin.P13 rotate.defl=false group="1. Setup"
+	//% num.min=1 num.defl=1 cs.defl=DigitalPin.P16 mosi.defl=DigitalPin.P15  miso.defl=DigitalPin.P14  sck.defl=DigitalPin.P13 rotate.defl=false 
 	export function setup(num: number, cs: DigitalPin, mosi: DigitalPin, miso: DigitalPin, sck: DigitalPin) {
 		// set internal variables        
 		_pinCS = cs
@@ -694,12 +694,6 @@ namespace motorbit {
 		_registerAll(_INTENSITY, 15) // set brightness to 15
 		_registerAll(_SHUTDOWN, 1) // turn on
 		clearAll() // clear screen on all MAX7219s
-	}
-
-	//% block="Rotate matrix display $rotation|Reverse printing order $reversed" rotation.defl=rotation_direction.none group="1. Setup" blockExternalInputs=true advanced=true
-	export function for_4_in_1_modules(rotation: rotation_direction, reversed: boolean) {
-		_rotation = rotation
-		_reversed = reversed
 	}
 
 	function _registerAll(addressCode: number, data: number) {
@@ -773,7 +767,7 @@ namespace motorbit {
 		return matrix
 	}
 
-	//% block="Scroll text $text|delay (ms) $delay|at the end wait (ms) $endDelay" text.defl="Hello world!" delay.min=0 delay.defl=75 endDelay.min=0 endDelay.defl=500 group="2. Display text on matrixs" blockExternalInputs=true
+	//% block="Scroll text $text|delay (ms) $delay|at the end wait (ms) $endDelay" text.defl="Hello world!" delay.min=0 delay.defl=75 endDelay.min=0 endDelay.defl=500  blockExternalInputs=true
 	export function scrollText(text: string, delay: number, endDelay: number) {
 		let printPosition = _displayArray.length - 8
 		let characters_index: number[] = []
@@ -836,236 +830,39 @@ namespace motorbit {
 		basic.pause(endDelay)
 	}
 
-    //% block="Display text $text|offset $offset|clear screen first $clear" text.defl="Hi!" offset.min=-8 clear.defl=true group="2. Display text on matrixs" blockExternalInputs=true
-    export function displayText(text: string, offset: number, clear: boolean) {
-        // clear screen and array if needed
-        if (clear) {
-            for (let i = 0; i < _displayArray.length; i++) _displayArray[i] = 0
-            clearAll()
-        }
-        let printPosition = Math.constrain(offset, -8, _displayArray.length - 9) + 8
-        let currentPosition = printPosition
-        let characters_index: number[] = []
-        let currentChrIndex = 0
-        let currentFontArray: number[] = []
-        // get font index of every characters
-        for (let i = 0; i < text.length; i++) {
-            let index = font.indexOf(text.substr(i, 1))
-            if (index >= 0) characters_index.push(index)
-        }
-        // print characters into array from offset position
-        while (currentPosition < _displayArray.length - 8) {
-            currentFontArray = font_matrix[characters_index[currentChrIndex]]
-            if (currentFontArray != null)
-                for (let j = 0; j < currentFontArray.length; j++)
-                    _displayArray[printPosition++] = currentFontArray[j]
-            currentChrIndex += 1
-            if (currentChrIndex == characters_index.length) break
-        }
-        // write every 8 columns of display array (visible area) to each MAX7219s
-        let matrixCountdown = _matrixNum - 1
-        let actualMatrixIndex = 0
-        for (let i = 8; i < _displayArray.length - 8; i += 8) {
-            if (matrixCountdown < 0) break
-            if (!_reversed) actualMatrixIndex = matrixCountdown
-            else actualMatrixIndex = _matrixNum - 1 - matrixCountdown
-            if (_rotation == rotation_direction.none) {
-                for (let j = i; j < i + 8; j++)
-                    _registerForOne(_DIGIT[j - i], _displayArray[j], actualMatrixIndex)
-            } else { // rotate matrix and reverse order if needed
-                let tmpColumns = [0, 0, 0, 0, 0, 0, 0, 0]
-                let l = 0
-                for (let j = i; j < i + 8; j++)  tmpColumns[l++] = _displayArray[j]
-                displayLEDsForOne(_getMatrixFromColumns(tmpColumns), actualMatrixIndex)
-            }
-            matrixCountdown--
-        }
-    }
-
-    /**
-    * Print a custom character from a number array on the chain of MAX7219 matrixs at a specific spot. Each number in the array is 0-255, the decimal version of column's byte number. Offset value -8 ~ last column of matrixs. You can choose to clear the screen or not (if not it can be used to print multiple string on the MAX7219 chain).
-    */
-    //% block="Display custom character from|number array $customCharArray|offset $offset|clear screen first $clear" offset.min=-8 clear.defl=true group="2. Display text on matrixs" blockExternalInputs=true advanced=true
-    export function displayCustomCharacter(customCharArray: number[], offset: number, clear: boolean) {
-        // clear screen and array if needed
-        if (clear) {
-            for (let i = 0; i < _displayArray.length; i++) _displayArray[i] = 0
-            clearAll()
-        }
-        let printPosition: number = Math.constrain(offset, -8, _displayArray.length - 9) + 8
-        if (customCharArray != null) {
-            // print column data to display array
-            for (let i = 0; i < customCharArray.length; i++)
-                _displayArray[printPosition + i] = customCharArray[i]
-            // write every 8 columns of display array (visible area) to each MAX7219s
-            let matrixCountdown = _matrixNum - 1
-            let actualMatrixIndex = 0
-            for (let i = 8; i < _displayArray.length - 8; i += 8) {
-                if (matrixCountdown < 0) break
-                if (!_reversed) actualMatrixIndex = matrixCountdown
-                else actualMatrixIndex = _matrixNum - 1 - matrixCountdown
-                if (_rotation == rotation_direction.none) {
-                    for (let j = i; j < i + 8; j++)
-                        _registerForOne(_DIGIT[j - i], _displayArray[j], actualMatrixIndex)
-                } else { // rotate matrix and reverse order if needed
-                    let tmpColumns = [0, 0, 0, 0, 0, 0, 0, 0]
-                    let l = 0
-                    for (let j = i; j < i + 8; j++) tmpColumns[l++] = _displayArray[j]
-                    displayLEDsForOne(_getMatrixFromColumns(tmpColumns), actualMatrixIndex)
-                }
-                matrixCountdown--
-            }
-        }
-    }
-
-    /**
-    * Return a number array calculated from a 8x8 LED byte array (example: B00100000,B01000000,B10000110,B10000000,B10000000,B10000110,B01000000,B00100000)
-    */
-    //% block="Get custom character number array|from byte-array string $text" text.defl="B00100000,B01000000,B10000110,B10000000,B10000000,B10000110,B01000000,B00100000" group="2. Display text on matrixs" blockExternalInputs=true advanced=true
-    export function getCustomCharacterArray(text: string) {
-        let tempTextArray: string[] = []
-        let resultNumberArray: number[] = []
-        let currentIndex = 0
-        let currentChr = ""
-        let currentNum = 0
-        let columnNum = 0
-        if (text != null && text.length >= 0) {
-            // seperate each byte number to a string
-            while (currentIndex < text.length) {
-                tempTextArray.push(text.substr(currentIndex + 1, 8))
-                currentIndex += 10
-            }
-            for (let i = 0; i < tempTextArray.length; i++) {
-                columnNum = 0
-                // read each bit and calculate the decimal sum
-                for (let j = tempTextArray[i].length - 1; j >= 0; j--) {
-                    currentChr = tempTextArray[i].substr(j, 1)
-                    if (currentChr == "1" || currentChr == "0")
-                        currentNum = parseInt(currentChr)
-                    else
-                        currentNum = 0
-                    columnNum += (2 ** (tempTextArray[i].length - j - 1)) * currentNum
-                }
-                // generate new decimal array
-                resultNumberArray.push(columnNum)
-            }
-            return resultNumberArray
-        } else {
-            return null
-        }
-    }
-
-    /**
-    * Add a custom character from a number array at the end of the extension's font library.
-    * Each number in the array is 0-255, the decimal version of column's byte number.
-    */
-    //% block="Add custom character $chr|number array $customCharArray|to the extension font library"
-    //% chr.defl=""
-    //% blockExternalInputs=true
-    //% group="2. Display text on matrixs"
-    //% advanced=true
-    export function addCustomChr(chr: string, customCharArray: number[]) {
-        if (chr != null && chr.length == 1 && customCharArray != null) {
-            // add new character
-            font.push(chr)
-            font_matrix.push(customCharArray)
-        }
-    }
-
-    /**
-    * Display all fonts in the extension font library
-    */
-    //% block="Display all fonts at delay $delay" delay.min=0 delay.defl=200 group="2. Display text on matrixs" advanced=true
-    export function fontDemo(delay: number) {
-        let offsetIndex = 0
-        clearAll()
-        // print all characters on all matrixs
-        for (let i = 1; i < font_matrix.length; i++) {
-            // print two blank spaces to "reset" a matrix
-            displayCustomCharacter(font_matrix[0], offsetIndex * 8, false)
-            displayCustomCharacter(font_matrix[0], offsetIndex * 8 + 4, false)
-            // print a character
-            displayCustomCharacter(font_matrix[i], offsetIndex * 8, false)
-            if (offsetIndex == _matrixNum - 1) offsetIndex = 0
-            else offsetIndex += 1
-            basic.pause(delay)
-        }
-        basic.pause(delay)
-        clearAll()
-    }
-
-    /**
-    * Turn on or off all MAX7219s
-    */
-    //% block="Turn on all matrixs $status" status.defl=true group="3. Basic light control" advanced=true
-    export function togglePower(status: boolean) {
-        if (status) _registerAll(_SHUTDOWN, 1)
-        else _registerAll(_SHUTDOWN, 0)
-    }
 
     /**
     * Set brightness level of LEDs on all MAX7219s
     */
-    //% block="Set all brightness level $level" level.min=0 level.max=15 level.defl=15 group="3. Basic light control"
+    //% block="Set all brightness level $level" level.min=0 level.max=15 level.defl=15 
     export function brightnessAll(level: number) {
         _registerAll(_INTENSITY, level)
     }
 
     /**
-    * Set brightness level of LEDs on a specific MAX7219s (index 0=farthest on the chain)
-    */
-    //% block="Set brightness level $level on matrix index = $index" level.min=0 level.max=15 level.defl=15 index.min=0 group="3. Basic light control" advanced=true
-    export function brightnessForOne(level: number, index: number) {
-        _registerForOne(_INTENSITY, level, index)
-    }
-
-    /**
     * Turn on all LEDs on all MAX7219s
     */
-    //% block="Fill all LEDs" group="3. Basic light control"
+    //% block="Fill all LEDs" 
     export function fillAll() {
         for (let i = 0; i < 8; i++) _registerAll(_DIGIT[i], 255)
     }
 
     /**
-    * Turn on LEDs on a specific MAX7219
-    */
-    //% block="Fill LEDs on matrix index = $index" index.min=0 group="3. Basic light control" advanced=true
-    export function fillForOne(index: number) {
-        for (let i = 0; i < 8; i++) _registerForOne(_DIGIT[i], 255, index)
-    }
-
-    /**
     * Turn off LEDs on all MAX7219s
     */
-    //% block="Clear all LEDs" group="3. Basic light control"
+    //% block="Clear all LEDs" 
     export function clearAll() {
         for (let i = 0; i < 8; i++) _registerAll(_DIGIT[i], 0)
     }
 
     /**
-    * Turn off LEDs on a specific MAX7219 (index 0=farthest on the chain)
-    */
-    //% block="Clear LEDs on matrix index = $index" index.min=0 group="3. Basic light control" advanced=true
-    export function clearForOne(index: number) {
-        for (let i = 0; i < 8; i++) _registerForOne(_DIGIT[i], 0, index)
-    }
-
-    /**
     * Turn on LEDs randomly on all MAX7219s
     */
-    //% block="Randomize all LEDs" index.min=0 group="3. Basic light control"
+    //% block="Randomize all LEDs" index.min=0 
     export function randomizeAll() {
         for (let i = 0; i < 8; i++) _registerAll(_DIGIT[i], Math.randomRange(0, 255))
     }
 
-    /**
-    * Turn on LEDs randomly on a specific MAX7219 (index 0=farthest on the chain)
-    */
-    //% block="Randomize LEDs on matrix index = $index" index.min=0 group="3. Basic light control" advanced=true
-    export function randomizeForOne(index: number) {
-        for (let i = 0; i < 8; i++) _registerForOne(_DIGIT[i], Math.randomRange(0, 255), index)
-    }
 
 
     let font = [" ", "!", "\"", "#", "$", "%", "&", "\'", "(", ")",
