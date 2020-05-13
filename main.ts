@@ -602,8 +602,8 @@ export function RUS_04(index: RgbUltrasonics, rgb: RgbColors, effect: ColorEffec
         break;
     }
 }
-//% blockId=TTP229_GetKeyCode
-//% block="SODPIN %SDO|SCLPIN %SCL"
+//% blockId=motorbit_GetKeyCode
+//% block="keyboard|SODPIN %SDO|SCLPIN %SCL"
 export function GetKeyCode(SDO: DigitalPin, SCL: DigitalPin): string
 {
 
