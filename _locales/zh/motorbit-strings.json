@@ -34,5 +34,6 @@
     "IrRemote|block": "红外",
     "IrRemote.init|block": "红外遥控器初始化引脚|%pin",
     "IrRemote.onPressEvent|block": "当红外遥控器按键|%btn|按下",
-	"motorbit.GetKeyCode|block": "矩阵键盘|SDO引脚 %SDO|SCL引脚 %SCL"
+	"motorbit.GetKeyCode|block": "矩阵键盘|SDO引脚 %SDO|SCL引脚 %SCL",
+	"motorbit.setup|block": "初始化|矩阵数(一般为1) $num|CS引脚 $cs|DIN引脚 $mosi|CLK引脚 $sck|MISO引脚(已禁用) $miso"
 }
