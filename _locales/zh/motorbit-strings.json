@@ -34,5 +34,5 @@
     "IrRemote|block": "红外",
     "IrRemote.init|block": "红外遥控器初始化引脚|%pin",
     "IrRemote.onPressEvent|block": "当红外遥控器按键|%btn|按下"
-	"TTP229.GetKeyCode|block": "矩阵键盘|SDO引脚 %SDO|SCL引脚 %SCL"
+	"motorbit.GetKeyCode|block": "矩阵键盘|SDO引脚 %SDO|SCL引脚 %SCL"
 }
