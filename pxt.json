@@ -17,6 +17,7 @@
         "RemoteIR.h",
         "TransmitterIR.cpp",
         "TransmitterIR.h",
+		"TTP229.ts",
         "_locales/zh/motorbit-strings.json"
     ],
     "testFiles": [
