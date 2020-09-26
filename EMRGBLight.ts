@@ -2,7 +2,7 @@
  * EMRGBLight package
  */
 
-enum EMRGBColors {
+enum RgbColors {
     //% block=red
     Red = 1,
     //% block=orange

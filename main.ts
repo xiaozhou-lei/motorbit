@@ -7,25 +7,23 @@ load dependency
 
 enum RgbColors {
     //% block=red
-    Red = 0x00FF00,
+    Red = 1,
     //% block=orange
-    Orange = 0xFFA500,
+    Orange = 2,
     //% block=yellow
-    Yellow = 0xFFFF00,
+    Yellow = 3,
     //% block=green
-    Green = 0xFF0000,
+    Green = 4,
     //% block=blue
-    Blue = 0x0000FF,
+    Blue = 5,
     //% block=indigo
-    Indigo = 0x4b0082,
+    Indigo = 6,
     //% block=violet
-    Violet = 0x8a2be2,
+    Violet = 7,
     //% block=purple
-    Purple = 0xFF00FF,
+    Purple = 8,
     //% block=white
-    White = 0xFFFFFF,
-    //% block=black
-    Black = 0x000000
+    White = 9
 }
 
 enum RgbUltrasonics {
