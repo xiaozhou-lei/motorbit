@@ -184,7 +184,7 @@ namespace EMRGBLight {
     }
     
     export function create(pin: DigitalPin, numleds: number, mode: EMRGBPixelMode): EmakefunRGBLight {
-        let light = new LHRGBLight();
+        let light = new EmakefunRGBLight();
         let stride = mode === EMRGBPixelMode.RGBW ? 4 : 3;
         light.buf = pins.createBuffer(numleds * stride);
         light.start = 0;
