@@ -4,23 +4,25 @@
 
 enum RgbColors {
     //% block=red
-    Red = 1,
+    Red = 0xFF0000,
     //% block=orange
-    Orange = 2,
+    Orange = 0xFFA500,
     //% block=yellow
-    Yellow = 3,
+    Yellow = 0xFFFF00,
     //% block=green
-    Green = 4,
+    Green = 0x00FF00,
     //% block=blue
-    Blue = 5,
+    Blue = 0x0000FF,
     //% block=indigo
-    Indigo = 6,
+    Indigo = 0x4b0082,
     //% block=violet
-    Violet = 7,
+    Violet = 0x8a2be2,
     //% block=purple
-    Purple = 8,
+    Purple = 0xFF00FF,
     //% block=white
-    White = 9
+    White = 0xFFFFFF,
+    //% block=black
+    Black = 0x000000
 }
 
 /**
@@ -59,7 +61,7 @@ namespace EMRGBLight {
 
         setBrightness(brightness: number): void {
             this.brightness = brightness & 0xff;
-            this.easeBrightness();
+            //this.easeBrightness();
         }
 
         setPin(pin: DigitalPin): void {
@@ -82,56 +84,16 @@ namespace EMRGBLight {
             }
         }
 
-        private setPixelRGB(pixeloffset: number, rgb: RgbColors): void {
+        private setPixelRGB(pixeloffset: number, rgb: number): void {
             if (pixeloffset < 0
                 || pixeloffset >= this._length)
                 return;
-            let tureRgb = 0;
-            switch (rgb)
-            {
-                case RgbColors.Red:
-                    tureRgb = 0xFF0000;
-                    break;    
-
-                case RgbColors.Orange:
-                    tureRgb = 0xFFA500;    
-                    break;    
-
-                case RgbColors.Yellow:
-                    tureRgb = 0xFFFF00;
-                    break;    
-                    
-                case RgbColors.Green:
-                    tureRgb = 0x00FF00;    
-                    break;    
-
-                    case RgbColors.Blue:
-                    tureRgb = 0x0000FF;
-                    break;    
-                    
-                case RgbColors.Indigo:
-                    tureRgb = 0x4b0082;    
-                    break;    
-
-                case RgbColors.Violet:
-                    tureRgb = 0x8a2be2;
-                    break;    
-                    
-                case RgbColors.Purple:
-                    tureRgb = 0xFF00FF;    
-                    break;   
-
-                case RgbColors.White:
-                    tureRgb = 0xFFFFFF;    
-                    break;   
-            }
-
             let stride = this._mode === EMRGBPixelMode.RGBW ? 4 : 3;
             pixeloffset = (pixeloffset + this.start) * stride;
 
-            let red = unpackR(tureRgb);
-            let green = unpackG(tureRgb);
-            let blue = unpackB(tureRgb);
+            let red = unpackR(rgb);
+            let green = unpackG(rgb);
+            let blue = unpackB(rgb);
 
             let br = this.brightness;
             if (br < 255) {
@@ -190,7 +152,7 @@ namespace EMRGBLight {
         light.start = 0;
         light._length = numleds;
         light._mode = mode;
-        light.setBrightness(255);
+        light.setBrightness(128);
         light.setPin(pin);
         return light;
     }
