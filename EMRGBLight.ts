@@ -68,7 +68,7 @@ namespace EMRGBLight {
             // don't yield to avoid races on initialization
         }
 
-        setPixelColor(pixeloffset: number, rgb: EMRGBColors): void {
+        setPixelColor(pixeloffset: number, rgb: RgbColors): void {
             if (pixeloffset == this._length)//全部
             {
                 for (let i = 0; i < this._length; i++)
@@ -82,46 +82,46 @@ namespace EMRGBLight {
             }
         }
 
-        private setPixelRGB(pixeloffset: number, rgb: EMRGBColors): void {
+        private setPixelRGB(pixeloffset: number, rgb: RgbColors): void {
             if (pixeloffset < 0
                 || pixeloffset >= this._length)
                 return;
             let tureRgb = 0;
             switch (rgb)
             {
-                case EMRGBColors.Red:
+                case RgbColors.Red:
                     tureRgb = 0xFF0000;
                     break;    
 
-                case EMRGBColors.Orange:
+                case RgbColors.Orange:
                     tureRgb = 0xFFA500;    
                     break;    
 
-                case EMRGBColors.Yellow:
+                case RgbColors.Yellow:
                     tureRgb = 0xFFFF00;
                     break;    
                     
-                case EMRGBColors.Green:
+                case RgbColors.Green:
                     tureRgb = 0x00FF00;    
                     break;    
 
-                    case EMRGBColors.Blue:
+                    case RgbColors.Blue:
                     tureRgb = 0x0000FF;
                     break;    
                     
-                case EMRGBColors.Indigo:
+                case RgbColors.Indigo:
                     tureRgb = 0x4b0082;    
                     break;    
 
-                case EMRGBColors.Violet:
+                case RgbColors.Violet:
                     tureRgb = 0x8a2be2;
                     break;    
                     
-                case EMRGBColors.Purple:
+                case RgbColors.Purple:
                     tureRgb = 0xFF00FF;    
                     break;   
 
-                case EMRGBColors.White:
+                case RgbColors.White:
                     tureRgb = 0xFFFFFF;    
                     break;   
             }
@@ -184,7 +184,7 @@ namespace EMRGBLight {
     }
     
     export function create(pin: DigitalPin, numleds: number, mode: EMRGBPixelMode): EmakefunRGBLight {
-        let light = new EmakefunRGBLight();
+        let light = new LHRGBLight();
         let stride = mode === EMRGBPixelMode.RGBW ? 4 : 3;
         light.buf = pins.createBuffer(numleds * stride);
         light.start = 0;
