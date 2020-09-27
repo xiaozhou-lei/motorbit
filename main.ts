@@ -5,26 +5,7 @@ load dependency
 "motorbit": "file:../pxt-motorbit"
 */
 
-enum RgbColors {
-    //% block=red
-    Red = 1,
-    //% block=orange
-    Orange = 2,
-    //% block=yellow
-    Yellow = 3,
-    //% block=green
-    Green = 4,
-    //% block=blue
-    Blue = 5,
-    //% block=indigo
-    Indigo = 6,
-    //% block=violet
-    Violet = 7,
-    //% block=purple
-    Purple = 8,
-    //% block=white
-    White = 9
-}
+
 
 enum RgbUltrasonics {
 //% block=left
