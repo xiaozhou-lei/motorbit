@@ -1,11 +1,3 @@
-/*
-ken@emakefun.com
-modified from pxt-servo/servodriver.ts
-load dependency
-"motorbit": "file:../pxt-motorbit"
-*/
-
-
 
 enum RgbUltrasonics {
 //% block=left
